@@ -63,7 +63,7 @@ public class DaoUsuarioRepository {
 		
 		List<ModelLogin> retorno = new ArrayList<ModelLogin>();
 		
-		String sql = "select * from model_login where upper(nome) like upper(?)";
+		String sql = "select * from model_login where upper(nome) like upper(?) and useradmin is false";
 		
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 		preparedStatement.setString(1, "%" +nome+ "%" );
@@ -115,7 +115,7 @@ public class DaoUsuarioRepository {
 		
 		ModelLogin modelLogin = new ModelLogin();
 		
-		String sql = "select * from model_login where id = ?";
+		String sql = "select * from model_login where id = ? and useradmin is false";
 		
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 		
@@ -161,5 +161,30 @@ public class DaoUsuarioRepository {
 		connection.commit();
 	}
 	
+	public List<ModelLogin> consultaUsuarioTodos() throws SQLException{
+		
+		List<ModelLogin> retorno = new ArrayList<ModelLogin>();
+		
+		String sql = "select * from model_login where useradmin is false order by id desc";
+		
+		PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		
+		ResultSet resultado = preparedStatement.executeQuery();
+		
+		while(resultado.next()) {
+
+			ModelLogin modelLogin = new ModelLogin();
+			
+			modelLogin.setId( resultado.getLong("id") );
+			modelLogin.setEmail(resultado.getString("email"));
+			modelLogin.setLogin(resultado.getString("login"));
+			modelLogin.setSenha(resultado.getString("senha"));
+			modelLogin.setNome(resultado.getString("nome"));
+			
+			retorno.add(modelLogin);
+			
+		}
+		return retorno;
+	}
 	
 }

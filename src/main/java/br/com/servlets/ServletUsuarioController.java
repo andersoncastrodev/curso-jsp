@@ -63,6 +63,8 @@ public class ServletUsuarioController extends HttpServlet {
 			
 			ModelLogin login = usuarioRepository.consultaUsuarioPorId(id);
 			
+			List<ModelLogin> logins = usuarioRepository.consultaUsuarioTodos();
+			request.setAttribute("modelLogin", logins);
 			
 			//Manda uma Messagem de SUCESSO PARA VIEW.
 			request.setAttribute("msg", "Usuário em Edição");
@@ -71,7 +73,21 @@ public class ServletUsuarioController extends HttpServlet {
 			
 			request.getRequestDispatcher("principal/usuario.jsp").forward(request, response);
 	    }
+		else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listarUser")) {
+			
+			List<ModelLogin> logins = usuarioRepository.consultaUsuarioTodos();
+			
+		
+			request.setAttribute("modelLogin", logins);
+			request.setAttribute("msg", "Todos os usuários");
+			request.getRequestDispatcher("principal/usuario.jsp").forward(request, response);
+			
+		}
 		 else {
+			 
+			List<ModelLogin> logins = usuarioRepository.consultaUsuarioTodos();
+			request.setAttribute("modelLogin", logins);
+			
 			request.getRequestDispatcher("principal/usuario.jsp").forward(request, response);
 		}
 
@@ -105,8 +121,6 @@ public class ServletUsuarioController extends HttpServlet {
 		objLogin.setLogin(login);
 		objLogin.setSenha(senha);
 		
-		System.out.println(objLogin.toString());
-		
 		if(usuarioRepository.validarLogin(objLogin.getLogin()) && objLogin.getId() == null) {
 			msg = "Usuario Já Cadastro";
 			
@@ -121,6 +135,9 @@ public class ServletUsuarioController extends HttpServlet {
 		}
 		//RequestDispatcher redireciona = request.getRequestDispatcher("principal/usuario.jsp");
 		//redireciona.forward(request, response);
+		
+		List<ModelLogin> logins = usuarioRepository.consultaUsuarioTodos();
+		request.setAttribute("modelLogin", logins);
 		
 		//Manda o objeto para pagina.
 		request.setAttribute("modolLogin", objLogin);
