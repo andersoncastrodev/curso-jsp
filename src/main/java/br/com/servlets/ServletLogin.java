@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import br.com.dao.DaoLoginRepository;
+import br.com.dao.DaoUsuarioRepository;
 import br.com.model.ModelLogin;
 
 // @WebServlet("/servletlogin") - Normal com apenas 1 URL, mas recebe um Array.
@@ -21,6 +22,8 @@ public class ServletLogin extends HttpServlet {
       
 	private DaoLoginRepository daoLoginRepository = new DaoLoginRepository();
 
+	private DaoUsuarioRepository daoUsuarioRepository = new DaoUsuarioRepository();
+	
     public ServletLogin() {
         super();
 
@@ -61,11 +64,17 @@ public class ServletLogin extends HttpServlet {
 			
 			if(daoLoginRepository.validarAutenticacao(loginModel) ) {
              
+				
 				// AQUI ENTRA NO SISTEMA. 
 				//Passos Para Seçao Usuario 
 				
 				request.getSession().setAttribute("usuario", loginModel.getLogin() );
 				//Passo passar Só o nome do Usuario  ou o OBJETO INTEIRO. ou só a senha loginModel.getSenha() etc..
+				
+				loginModel = daoUsuarioRepository.consultaUsuarioLogado(login);
+				
+				//Passando o Objeto Inteiro para o secessão 
+				request.getSession().setAttribute("isAdmin", loginModel.getUseradmin());
 				
 				if(url == null || url.equals("null")) {
 					url = "principal/principal.jsp";

@@ -1,12 +1,6 @@
 package br.com.servlets;
 
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -15,9 +9,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.dao.DaoUsuarioRepository;
 import br.com.model.ModelLogin;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/servletusuariocontroller") //NOME DO MAPEAMENTO QUE SERA USADO NO LINKS LÁ NO HTML.
-public class ServletUsuarioController extends HttpServlet {
+public class ServletUsuarioController extends ServletGenericUtil {
 	
 	private static final long serialVersionUID = 1L;
    
@@ -49,7 +48,7 @@ public class ServletUsuarioController extends HttpServlet {
 			  
 			  String nomeBusca = request.getParameter("nomeBusca");
 			  
-		     List<ModelLogin> dadosJsonUser = usuarioRepository.consultaUsuarioList(nomeBusca);
+		     List<ModelLogin> dadosJsonUser = usuarioRepository.consultaUsuarioList(nomeBusca, super.getUserLogado(request) );
 			  
 		     ObjectMapper mapper = new ObjectMapper(); //CRIANDO OBJETO JSON
 		     
@@ -61,9 +60,9 @@ public class ServletUsuarioController extends HttpServlet {
 			
 			 String id = request.getParameter("id");
 			
-			ModelLogin login = usuarioRepository.consultaUsuarioPorId(id);
+			ModelLogin login = usuarioRepository.consultaUsuarioPorId(id, super.getUserLogado(request));
 			
-			List<ModelLogin> logins = usuarioRepository.consultaUsuarioTodos();
+			List<ModelLogin> logins = usuarioRepository.consultaUsuarioTodos(super.getUserLogado(request));
 			request.setAttribute("modelLogin", logins);
 			
 			//Manda uma Messagem de SUCESSO PARA VIEW.
@@ -75,7 +74,7 @@ public class ServletUsuarioController extends HttpServlet {
 	    }
 		else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listarUser")) {
 			
-			List<ModelLogin> logins = usuarioRepository.consultaUsuarioTodos();
+			List<ModelLogin> logins = usuarioRepository.consultaUsuarioTodos( super.getUserLogado(request) );
 			
 		
 			request.setAttribute("modelLogin", logins);
@@ -85,7 +84,7 @@ public class ServletUsuarioController extends HttpServlet {
 		}
 		 else {
 			 
-			List<ModelLogin> logins = usuarioRepository.consultaUsuarioTodos();
+			List<ModelLogin> logins = usuarioRepository.consultaUsuarioTodos( super.getUserLogado(request) );
 			request.setAttribute("modelLogin", logins);
 			
 			request.getRequestDispatcher("principal/usuario.jsp").forward(request, response);
@@ -112,6 +111,7 @@ public class ServletUsuarioController extends HttpServlet {
 		String email = request.getParameter("email");
 		String login = request.getParameter("login");
 		String senha = request.getParameter("senha");
+		String perfil = request.getParameter("perfil");
 
 		ModelLogin objLogin = new ModelLogin();
 		
@@ -120,6 +120,7 @@ public class ServletUsuarioController extends HttpServlet {
 		objLogin.setEmail(email);
 		objLogin.setLogin(login);
 		objLogin.setSenha(senha);
+		objLogin.setPerfil(perfil);
 		
 		if(usuarioRepository.validarLogin(objLogin.getLogin()) && objLogin.getId() == null) {
 			msg = "Usuario Já Cadastro";
@@ -131,12 +132,12 @@ public class ServletUsuarioController extends HttpServlet {
 			   msg = "Usuario Atualziado com Sucesso!";
 			}
 			//PASSSANDO O OBJETO CARREGADOR PARA O SALVAR.
-			objLogin = usuarioRepository.gravarUsuario(objLogin);
+			objLogin = usuarioRepository.gravarUsuario(objLogin,super.getUserLogado(request));
 		}
 		//RequestDispatcher redireciona = request.getRequestDispatcher("principal/usuario.jsp");
 		//redireciona.forward(request, response);
 		
-		List<ModelLogin> logins = usuarioRepository.consultaUsuarioTodos();
+		List<ModelLogin> logins = usuarioRepository.consultaUsuarioTodos( super.getUserLogado(request) );
 		request.setAttribute("modelLogin", logins);
 		
 		//Manda o objeto para pagina.

@@ -70,6 +70,17 @@
                                                                 <label class="float-label">Email</label>
                                                             </div>
                                                             
+                                                           <div class="form-group form-default form-static-label">
+															  
+															   <select class="form-control" aria-label="Default select example" name="perfil">
+																  <option selected>[Selecione o Perfil]</option>
+																  <option value="ADMIN">Admin</option>
+																  <option value="SECRETARIA">Secretária</option>
+																  <option value="AUXILIAR">Auxiliar</option>
+																</select>
+																<span class="form-bar"></span>
+                                                                <label class="float-label">Perfil</label>
+                                                           </div> 
                                                             <div class="form-group form-default form-static-label">
                                                                 <input type="text" name="login" id="login" class="form-control" required="required" autocomplete="off" value="${modolLogin.login }">
                                                                 <span class="form-bar"></span>
@@ -95,7 +106,8 @@
                                                 </div>
                                             </div>   
 										<span>${msg}</span>
-											<div style="height: 350px; overflow: scroll;">
+					
+					<div style="height: 350px; overflow: scroll;">
 				
 						<table class="table" id="tableResultadosView">
 						  <thead>
@@ -111,12 +123,14 @@
 						    	<tr>
 						    	  <td> <c:out value="${ml.id}"></c:out> </td>
 						    	   <td> <c:out value="${ml.nome}"></c:out> </td>
-						    	    <td> <a class="btn btn-success" href="<%= request.getContextPath() %>servletusuariocontroller?acao=buscarEditar&id=${ml.id}">Ver</a> </td>
+						    	    <td> <a class="btn btn-success" href="<%= request.getContextPath() %>/servletusuariocontroller?acao=buscarEditar&id=${ml.id}">Ver</a> </td>
 						    	</tr>
 						    </c:forEach>
 						    
 						  </tbody>
-						</table>						</div>
+						</table>						
+						
+						</div>
 							</div>	
 			
 						        

@@ -16,6 +16,9 @@ public class ModelLogin implements Serializable {
 	
 	private String email;
 
+	private Boolean useradmin; 
+	
+	private String perfil;
 
 	public Long getId() {
 		return id;
@@ -55,6 +58,23 @@ public class ModelLogin implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+
+	public Boolean getUseradmin() {
+		return useradmin;
+	}
+
+	public void setUseradmin(Boolean useradmin) {
+		this.useradmin = useradmin;
+	}
+	
+	public String getPerfil() {
+		return perfil;
+	}
+	
+	public void setPerfil(String perfil) {
+		this.perfil = perfil;
 	}
 
 	//Verifica se os usuario ja foi criando.
